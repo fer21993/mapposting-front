@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesitamos tu ubicación para mostrarla en el mapa</string>
 	<key>CFBundleDisplayName</key>
 	<string>Flutter Front</string>
 	<key>CFBundleExecutable</key>
