@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_front/utils/global.colors.dart';
-import 'package:flutter_front/view/event.confirmation.view.dart';
+import 'package:flutter_front/features/events/views/event.confirmation.view.dart';
+import 'package:flutter_front/data/models/evento.dart';
 
 class EventDetailView extends StatelessWidget {
-  final String eventName;
-  final String days;
-  final String schedule;
+  final Evento evento;
 
-  const EventDetailView({
-    Key? key,
-    required this.eventName,
-    required this.days,
-    required this.schedule,
-  }) : super(key: key);
+  const EventDetailView({Key? key, required this.evento}) : super(key: key);
 
   // ✅ Generar código único de confirmación
   String _generateConfirmationCode() {
     // TODO: En producción, esto vendría del backend
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    return 'EVT-${eventName.substring(0, 3).toUpperCase()}-$timestamp';
+    return 'EVT-${evento.nameEvent.substring(0, 3).toUpperCase()}-$timestamp';
   }
 
   @override
@@ -32,7 +26,7 @@ class EventDetailView extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          eventName,
+          evento.nameEvent,
           style: TextStyle(
             color: GlobalColors.textColor,
             fontWeight: FontWeight.bold,
@@ -43,17 +37,34 @@ class EventDetailView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Imagen del evento (placeholder)
-            Container(
-              width: double.infinity,
-              height: 200,
-              color: GlobalColors.mainColor.withOpacity(0.2),
-              child: Icon(
-                Icons.event,
-                size: 80,
-                color: GlobalColors.mainColor,
-              ),
-            ),
+            // Imagen del evento
+            evento.imgEvent != null
+                ? Image.network(
+                    evento.imgEvent!,
+                    width: double.infinity,
+                    height: 200,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      width: double.infinity,
+                      height: 200,
+                      color: GlobalColors.mainColor.withOpacity(0.2),
+                      child: Icon(
+                        Icons.event,
+                        size: 80,
+                        color: GlobalColors.mainColor,
+                      ),
+                    ),
+                  )
+                : Container(
+                    width: double.infinity,
+                    height: 200,
+                    color: GlobalColors.mainColor.withOpacity(0.2),
+                    child: Icon(
+                      Icons.event,
+                      size: 80,
+                      color: GlobalColors.mainColor,
+                    ),
+                  ),
 
             Padding(
               padding: const EdgeInsets.all(20),
@@ -62,7 +73,7 @@ class EventDetailView extends StatelessWidget {
                 children: [
                   // Nombre del evento
                   Text(
-                    eventName,
+                    evento.nameEvent,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -77,7 +88,7 @@ class EventDetailView extends StatelessWidget {
                       Icon(Icons.calendar_today, color: GlobalColors.mainColor),
                       const SizedBox(width: 12),
                       Text(
-                        days,
+                        evento.dias ?? 'Sin fecha',
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],
@@ -91,7 +102,7 @@ class EventDetailView extends StatelessWidget {
                       Icon(Icons.access_time, color: GlobalColors.mainColor),
                       const SizedBox(width: 12),
                       Text(
-                        schedule,
+                        evento.horario ?? 'Sin horario',
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],
@@ -104,10 +115,11 @@ class EventDetailView extends StatelessWidget {
                     children: [
                       Icon(Icons.location_on, color: GlobalColors.mainColor),
                       const SizedBox(width: 12),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'UTEQ - Universidad Tecnológica de Querétaro',
-                          style: TextStyle(fontSize: 16),
+                          evento.edificio?.nameBuilding ??
+                              'UTEQ - Universidad Tecnológica de Querétaro',
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
@@ -118,14 +130,12 @@ class EventDetailView extends StatelessWidget {
                   // Descripción
                   const Text(
                     'Descripción',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Evento de programa educativo embajadores. Los estudiantes podrán participar en diversas actividades académicas y culturales.',
+                    evento.descripEvent ??
+                        'Evento de programa educativo embajadores. Los estudiantes podrán participar en diversas actividades académicas y culturales.',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[700],
@@ -143,14 +153,14 @@ class EventDetailView extends StatelessWidget {
                       onPressed: () {
                         // ✅ Generar código y navegar a confirmación
                         final confirmationCode = _generateConfirmationCode();
-                        
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => EventConfirmationView(
-                              eventName: eventName,
-                              days: days,
-                              schedule: schedule,
+                              eventName: evento.nameEvent,
+                              days: evento.dias ?? 'Sin fecha',
+                              schedule: evento.horario ?? 'Sin horario',
                               confirmationCode: confirmationCode,
                             ),
                           ),

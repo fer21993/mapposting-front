@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_front/utils/global.colors.dart';
-import 'package:flutter_front/view/login.view.dart';
-import 'package:flutter_front/view/register.view.dart';
-import 'package:flutter_front/view/building.professors.view.dart';
+import 'package:flutter_front/features/auth/views/login.view.dart';
+import 'package:flutter_front/features/auth/views/register.view.dart';
+import 'package:flutter_front/features/professors/views/building.professors.view.dart';
+import 'package:flutter_front/features/auth/controllers/auth_controller.dart';
 
 class SearchProfessorView extends StatefulWidget {
   const SearchProfessorView({Key? key}) : super(key: key);
@@ -12,7 +14,7 @@ class SearchProfessorView extends StatefulWidget {
 }
 
 class _SearchProfessorViewState extends State<SearchProfessorView> {
-  bool isLoggedIn = true; // TODO: Verificar sesión real desde backend
+  final AuthController _authController = Get.find();
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> _filteredBuildings = [];
 
@@ -38,7 +40,9 @@ class _SearchProfessorViewState extends State<SearchProfessorView> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredBuildings = _buildings
-          .where((building) => building['nombre']!.toLowerCase().contains(query))
+          .where(
+            (building) => building['nombre']!.toLowerCase().contains(query),
+          )
           .toList();
     });
   }
@@ -67,7 +71,11 @@ class _SearchProfessorViewState extends State<SearchProfessorView> {
           ),
         ),
       ),
-      body: isLoggedIn ? _buildBuildingsList() : _buildLoginRequired(),
+      body: Obx(
+        () => _authController.isLoggedIn.value
+            ? _buildBuildingsList()
+            : _buildLoginRequired(),
+      ),
     );
   }
 
@@ -78,27 +86,17 @@ class _SearchProfessorViewState extends State<SearchProfessorView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.lock_outline,
-              size: 100,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.lock_outline, size: 100, color: Colors.grey[400]),
             const SizedBox(height: 30),
             const Text(
               'Inicia sesión para continuar',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 15),
             Text(
               'Por seguridad, solo usuarios con cuenta institucional pueden acceder a la información de profesores',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
@@ -134,16 +132,15 @@ class _SearchProfessorViewState extends State<SearchProfessorView> {
               children: [
                 Text(
                   '¿No tienes cuenta? ',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const RegisterView()),
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterView(),
+                      ),
                     );
                   },
                   child: Text(
@@ -197,18 +194,12 @@ class _SearchProfessorViewState extends State<SearchProfessorView> {
             children: [
               const Text(
                 'Edificios',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               Text(
                 '${_filteredBuildings.length} edificios',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ),

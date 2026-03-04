@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_front/utils/global.colors.dart';
-import 'package:flutter_front/view/home.view.dart';
+import 'package:flutter_front/features/home/views/home.view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_front/utils/global.colors.dart';
 import 'package:flutter_front/widgets/app_drawer.dart';
-import 'package:flutter_front/view/map.view.dart';
-import 'package:flutter_front/view/calendar.view.dart';
-import 'package:flutter_front/view/profile.view.dart';
+import 'package:flutter_front/features/map/views/map.view.dart';
+import 'package:flutter_front/features/events/views/calendar.view.dart';
+import 'package:flutter_front/features/profile/views/profile.view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -36,7 +36,10 @@ class _HomeViewState extends State<HomeView> {
         automaticallyImplyLeading: false,
         // ✅ Notificaciones a la IZQUIERDA
         leading: IconButton(
-          icon: Icon(Icons.notifications_outlined, color: GlobalColors.textColor),
+          icon: Icon(
+            Icons.notifications_outlined,
+            color: GlobalColors.textColor,
+          ),
           onPressed: () {
             print('TODO: Notificaciones');
           },
@@ -68,18 +71,12 @@ class _HomeViewState extends State<HomeView> {
         selectedItemColor: GlobalColors.mainColor,
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Buscar',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Eventos',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
     );

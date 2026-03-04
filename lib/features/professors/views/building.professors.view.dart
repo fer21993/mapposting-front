@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_front/utils/global.colors.dart';
-import 'package:flutter_front/view/professor.detail.view.dart';
+import 'package:flutter_front/features/professors/views/professor.detail.view.dart';
 
 class BuildingProfessorsView extends StatefulWidget {
   final String buildingName;
 
-  const BuildingProfessorsView({
-    Key? key,
-    required this.buildingName,
-  }) : super(key: key);
+  const BuildingProfessorsView({Key? key, required this.buildingName})
+    : super(key: key);
 
   @override
   State<BuildingProfessorsView> createState() => _BuildingProfessorsViewState();
@@ -58,9 +56,11 @@ class _BuildingProfessorsViewState extends State<BuildingProfessorsView> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredProfessors = _professors
-          .where((prof) =>
-              prof['nombre']!.toLowerCase().contains(query) ||
-              prof['materia']!.toLowerCase().contains(query))
+          .where(
+            (prof) =>
+                prof['nombre']!.toLowerCase().contains(query) ||
+                prof['materia']!.toLowerCase().contains(query),
+          )
           .toList();
     });
   }
@@ -122,18 +122,12 @@ class _BuildingProfessorsViewState extends State<BuildingProfessorsView> {
               children: [
                 const Text(
                   'Profesores',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
                 Text(
                   '${_filteredProfessors.length} profesores',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -148,11 +142,18 @@ class _BuildingProfessorsViewState extends State<BuildingProfessorsView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.person_search, size: 60, color: Colors.grey[400]),
+                        Icon(
+                          Icons.person_search,
+                          size: 60,
+                          color: Colors.grey[400],
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           'No se encontraron profesores',
-                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),
@@ -164,10 +165,14 @@ class _BuildingProfessorsViewState extends State<BuildingProfessorsView> {
                     itemBuilder: (context, index) {
                       final professor = _filteredProfessors[index];
                       return ListTile(
-                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                        ),
                         leading: CircleAvatar(
                           radius: 28,
-                          backgroundColor: GlobalColors.mainColor.withOpacity(0.2),
+                          backgroundColor: GlobalColors.mainColor.withOpacity(
+                            0.2,
+                          ),
                           child: Icon(
                             Icons.person,
                             color: GlobalColors.mainColor,
@@ -187,16 +192,26 @@ class _BuildingProfessorsViewState extends State<BuildingProfessorsView> {
                             const SizedBox(height: 4),
                             Text(
                               professor['materia']!,
-                              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[700],
+                              ),
                             ),
                             const SizedBox(height: 2),
                             Row(
                               children: [
-                                Icon(Icons.door_front_door, size: 14, color: Colors.grey[600]),
+                                Icon(
+                                  Icons.door_front_door,
+                                  size: 14,
+                                  color: Colors.grey[600],
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   'Cubículo ${professor['cubiculo']}',
-                                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
                               ],
                             ),
