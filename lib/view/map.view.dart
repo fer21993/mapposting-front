@@ -35,6 +35,20 @@ class _MapViewState extends State<MapView> {
     const LatLng(20.6590521, -100.4027016),
   );
 
+  final Map<String, LatLngBounds> buildingBounds = {
+    "Edificio Rectoria": LatLngBounds(
+      LatLng(20.6541044, -100.4055756),
+      LatLng(20.6545684, -100.4052765),
+    ),
+
+    "Edificio C": LatLngBounds(
+      LatLng(20.6535139, -100.4054200),
+      LatLng(20.6538444, -100.4049915),
+    ),
+  };
+
+  String? _currentBuildingInside;
+
   LatLng? _userPosition;
   Stream<Position>? _positionStream;
   final Map<String, LatLng> nodeCoordinates = {
@@ -438,37 +452,45 @@ class _MapViewState extends State<MapView> {
     _positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 2,
+        distanceFilter: 4,
       ),
     );
 
-    _positionStream!.listen((Position position) {
-      final latLng = LatLng(position.latitude, position.longitude);
+    Geolocator.getPositionStream().listen((Position position) {
 
-      bool inside = _isInsideCampus(latLng);
+  LatLng latLng = LatLng(position.latitude, position.longitude);
 
-      setState(() {
-        _userPosition = latLng;
-        _isUserInsideCampus = inside;
+  bool insideCampus = _isInsideCampus(latLng);
 
-        if (!inside) {
-          _routePoints.clear();
-          _currentDestinationId = null;
-        }
-      });
+  // 🔎 Detectar si está dentro de edificio
+  String? insideBuilding = _getBuildingIfInside(latLng);
 
-      if (!inside) return;
+  if (insideBuilding != null) {
 
-      setState(() {
-        _userPosition = latLng;
-      });
+    if (_currentBuildingInside == insideBuilding) {
+      return;
+    }
 
-      _updateUserNode(latLng);
+    _currentBuildingInside = insideBuilding;
 
-      if (_currentDestinationId != null) {
-        _handleAutoRecalculation(latLng);
-      }
+    LatLng buildingPosition = nodeCoordinates[insideBuilding]!;
+
+    setState(() {
+      _userPosition = buildingPosition;
+      _isUserInsideCampus = insideCampus;
     });
+
+    return;
+  }
+
+  _currentBuildingInside = null;
+
+  setState(() {
+    _userPosition = latLng;
+    _isUserInsideCampus = insideCampus;
+  });
+
+});
   }
 
   void _updateUserNode(LatLng position) {
@@ -481,6 +503,15 @@ class _MapViewState extends State<MapView> {
       position: position,
       neighbors: [closestNode],
     );
+  }
+
+  String? _getBuildingIfInside(LatLng position) {
+    for (var entry in buildingBounds.entries) {
+      if (entry.value.contains(position)) {
+        return entry.key;
+      }
+    }
+    return null;
   }
 
   bool _isInsideCampus(LatLng position) {
