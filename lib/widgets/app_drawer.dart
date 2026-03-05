@@ -4,6 +4,7 @@ import 'package:flutter_front/utils/global.colors.dart';
 import 'package:flutter_front/features/professors/views/search.professor.view.dart';
 import 'package:flutter_front/features/auth/controllers/auth_controller.dart';
 import 'package:flutter_front/features/auth/views/login.view.dart';
+import 'package:flutter_front/features/events/views/qr_scanner.view.dart'; // ✅ NUEVO
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -49,11 +50,12 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
           ),
+          
           ListTile(
             leading: const Icon(Icons.search),
             title: const Text('Buscar profesores'),
             onTap: () {
-              Navigator.pop(context); // Cerrar drawer
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -62,6 +64,23 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+
+          // ✅ NUEVO - Escanear QR (siempre visible)
+          ListTile(
+            leading: Icon(Icons.qr_code_scanner, color: GlobalColors.mainColor),
+            title: const Text('Escanear QR'),
+            subtitle: const Text('Validar asistencia'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const QRScannerView(),
+                ),
+              );
+            },
+          ),
+
           const Divider(),
 
           // Mostrar login o logout según el estado
