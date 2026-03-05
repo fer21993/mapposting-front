@@ -3,10 +3,12 @@
 ## ⚠️ IMPORTANTE: Seguridad
 
 Los archivos con credenciales de Google **NO están en el repositorio** por seguridad (están en `.gitignore`):
-- `ios/Runner/GoogleService-Info.plist` 
+
+- `ios/Runner/GoogleService-Info.plist`
 - `android/app/google-services.json`
 
 **Archivos de ejemplo disponibles:**
+
 - `ios/Runner/GoogleService-Info.plist.example`
 - `android/app/google-services.json.example`
 
